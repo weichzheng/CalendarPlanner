@@ -1,0 +1,116 @@
+<html>
+	<head>
+		<title>My Calendar</title>
+		<link rel="stylesheet" href="jquery-ui/jquery-ui.css">
+		<link rel="stylesheet" href="jquery-ui/jquery-ui.structure.css">
+		<link rel="stylesheet" href="jquery-ui/jquery-ui.theme.css">
+		<link rel="stylesheet" href="css/stylesheet.css">
+		<link rel="stylesheet" class='theme' href="css/theme-ui-light/jquery-ui.css">
+	</head>
+
+	<body>
+		<div id='container'>
+
+        	<h1 id="heading" class="center">My Daily Planner</h1>
+
+			<div id="calendar"><br /></div>
+
+			<div id="toDoListContainer">
+			<!--	<div id='progressbar'></div> -->
+				<h2 id='taskHeading'>Tasks for Today:</h2>
+				<button type="button" title ='' class='ui-button ui-widget ui-corner-all ui-button-icon-only' id="addTask">
+					<span class='ui-icon ui-icon-plusthick'></span>Add New Task
+				</button>
+				<button type="button" title ='' class='ui-button ui-widget ui-corner-all ui-button-icon-only' id="removeBtn">
+					<span class='ui-icon ui-icon-minusthick'></span>Remove Selected Task(s)
+				</button>
+				<button type="button" title ='' class='ui-button ui-widget ui-corner-all ui-button-icon-only' id="completedBtn">
+					<span class='ui-icon ui-icon-check'></span>Toggle Completed
+				</button>
+				<button type="button" title ='' class='ui-button ui-widget ui-corner-all ui-button-icon-only' id="saveBtn">
+					<span class='ui-icon ui-icon-disk'></span>Save Changes
+				</button>
+				<div id="dummy" style="display:none"></div>
+				<br><br/>
+				<table class="taskTable" cellpadding='3px'>
+					<tr>
+						<th>Select</th>
+						<th style='width:400px'>Task</th>
+						<th>Difficulty</th>
+					</tr>
+				</table>
+				<br />
+			</div>
+
+		<!--<div class="goals">
+				<h2>Goals for Week of</h2>
+			</div>
+		-->
+		</div>
+	</body>
+    <script src="jquery3.4.1.js" type="text/javascript"></script>
+	<script src="jquery-ui/jquery-ui.js" type="text/javascript"></script>
+	<script src="taskList.js" type="text/javascript"></script>
+	<script src="dataHandler.js" type="text/javascript"></script>
+	<script src="themeControl.js" type="text/javascript"></script>
+    <script type="text/javascript">
+		//$('button').button();
+		changeTheme();
+		$('#progressbar').progressbar({
+
+		});
+		var chosenDate;
+		var	previousDate;
+
+		$("#calendar").datepicker({
+			changeYear:true,
+			changeMonth:true,
+			dateFormat: "mm/dd/yy",
+			gotoCurrent:true,
+			onSelect: function(){
+				chosenDate = $(this).val();
+				manageTasks(chosenDate, previousDate);
+				previousDate = chosenDate;
+				if ($('#toDoListContainer').find('table').find('tr').length < 2){
+					addNewTask($('#toDoListContainer').find('table'));
+				}
+				updateTaskHeading(chosenDate);
+			}
+		});
+		if (chosenDate == undefined){
+			$("#calendar").datepicker('setDate', 'today');
+			chosenDate = $("#calendar").datepicker().val();
+			manageTasks(chosenDate, previousDate);
+			previousDate = chosenDate;
+			updateTaskHeading(chosenDate);
+		}
+		if ($('#toDoListContainer').find('table').find('tr').length < 2){
+			addNewTask($('#toDoListContainer').find('table'));
+		}
+		$("#addTask").click(function(){
+			addNewTask($("#toDoListContainer").find('table'));
+		});
+		$("#removeBtn").click(removeTask);
+		$("#completedBtn").click(markCompleted);
+		$("#saveBtn").click(function(){saveTasks(chosenDate);});
+		$("#addTask").tooltip({
+	        track:true,
+	        content:"Add new task"
+	    });
+	    $("#removeBtn").tooltip({
+	        track:true,
+	        content:"Remove selected task(s)"
+	    });
+	    $("#completedBtn").tooltip({
+	        track:true,
+	        content:"Mark/Unmark task(s) completed"
+	    });
+	    $("#saveBtn").tooltip({
+	        track:true,
+	        content:"Save Changes"
+	    });
+
+
+
+    </script>
+</html>
